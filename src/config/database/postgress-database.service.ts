@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from 'pg';
 @Injectable()
-export class PostgresDatabaseService implements OnModuleInit {
+export class PgDb implements OnModuleInit {
   private client: Client;
   constructor(private configService: ConfigService) {}
 
