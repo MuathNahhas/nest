@@ -1,21 +1,27 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 @Injectable()
 export class PgDb implements OnModuleInit {
-  private client: Client;
+  private pool: Pool;
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
     const config = this.configService.get('database.postgres');
-    this.client = new Client({
+    this.pool = new Pool({
       host: config.host,
       port: config.port,
       user: config.username,
       password: config.password,
       database: config.database,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 3000,
     });
-    await this.client.connect();
     console.log('✅ PostgreSQL connected:', config.host);
+  }
+  async onModuleDestroy() {
+    await this.pool.end();
+    console.log('PostgreSQL Pool closed');
   }
 }
