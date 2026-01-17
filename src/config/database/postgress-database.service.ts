@@ -7,8 +7,8 @@ export class PgDb implements OnModuleInit {
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
-    const config = this.configService.get('database.postgres');
-    this.pool = new Pool({
+    const config = await this.configService.get('database.postgres');
+    this.pool = await new Pool({
       host: config.host,
       port: config.port,
       user: config.username,
