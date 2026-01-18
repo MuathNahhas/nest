@@ -2,12 +2,12 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Kysely, MysqlDialect } from 'kysely';
 import { createPool, Pool } from 'mysql2';
-import { MysqlDatabase } from './mysql/mysql.database';
+import { MysqlDatabase } from './mysql.database';
 
 @Injectable()
 export class MysqlDb implements OnModuleInit, OnModuleDestroy {
-  public MysqlDatabase!: Kysely<MysqlDatabase>;
-  private pool!: Pool;
+  public MysqlDatabase: Kysely<MysqlDatabase>;
+  private pool: Pool;
 
   constructor(private readonly configService: ConfigService) {}
 
