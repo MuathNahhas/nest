@@ -2,12 +2,12 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
-import { PgDatabase } from './postgres/pg.database';
+import { PgDatabase } from './pg.database';
 
 @Injectable()
 export class PgDb implements OnModuleInit {
   private pool: Pool;
-  public PgDatabase!: Kysely<PgDatabase>;
+  public PgDatabase: Kysely<PgDatabase>;
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
