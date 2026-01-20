@@ -7,14 +7,9 @@ export class RedisService {
   async setCache(key, value, ttlSeconds?) {
     const data = JSON.stringify(value);
     if (ttlSeconds) {
-      await this.redisClient.clientFunction.set(
-        key,
-        JSON.stringify(data),
-        'EX',
-        ttlSeconds,
-      );
+      await this.redisClient.clientFunction.set(key, data, 'EX', ttlSeconds);
     } else {
-      await this.redisClient.clientFunction.set(key, value);
+      await this.redisClient.clientFunction.set(key, data);
     }
   }
   async getCache(key: string) {
