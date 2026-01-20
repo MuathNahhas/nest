@@ -17,5 +17,5 @@ export interface AccountTable {
   open_emp_id: number | null;
   pending_balance: number | null;
   product_cd: string;
-  status: AccountStatusEnum;
+  status: string;
 }

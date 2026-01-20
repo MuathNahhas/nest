@@ -1,19 +1,37 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+  IsDateString,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { AccountStatusEnum } from '../enum/AccountStatusEnum';
 
 export class CreateAccountDto {
-  @IsNotEmpty()
-  @IsNumber()
-  account_id: number;
-  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateAccountItemDto)
+  request: CreateAccountItemDto[];
+}
+
+export class CreateAccountItemDto {
   @IsString()
-  product_cd: string;
   @IsNotEmpty()
+  product_cd: string;
+
   @IsNumber()
+  @Type(() => Number)
+  @IsNotEmpty()
   cust_id: number;
+
+  @IsDateString()
   @IsNotEmpty()
   open_date: Date;
-  @IsNotEmpty()
+
   @IsEnum(AccountStatusEnum)
-  status: string;
+  @IsNotEmpty()
+  status: AccountStatusEnum;
 }
