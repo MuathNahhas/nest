@@ -1,5 +1,9 @@
 import { registerAs } from '@nestjs/config';
-import { mysqlConnection, pgConnection } from './database.connections';
+import {
+  mysqlConnection,
+  pgConnection,
+  redisConnection,
+} from './database.connections';
 
 export default registerAs('database', () => {
   const env = process.env.NODE_ENV || 'development';
@@ -7,6 +11,7 @@ export default registerAs('database', () => {
     development: {
       mysql: mysqlConnection(),
       postgres: pgConnection(),
+      redis: redisConnection(),
     },
   };
   return map[env];
