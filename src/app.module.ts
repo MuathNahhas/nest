@@ -4,6 +4,7 @@ import databaseConfig from './config/env.config';
 import { MysqlDb } from './config/database/mysql/mysql-database.service';
 import { PgDb } from './config/database/postgres/postgress-database.service';
 import { AccountController } from './account/controller/account.controller';
+import { RedisModule } from './redis/ redis.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AccountController } from './account/controller/account.controller';
       load: [databaseConfig],
       cache: true,
     }),
+    RedisModule,
   ],
   controllers: [AccountController],
   providers: [MysqlDb, PgDb],
