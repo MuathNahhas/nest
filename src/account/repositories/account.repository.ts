@@ -1,8 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { MysqlDb } from '../../config/database/mysql/mysql-database.service';
 import { CreateAccountItemDto } from '../dto/create-account.dto';
 import { RedisService } from '../../redis/redis.service';
-import { notFoundMessage } from '../../helper/response/error-messages';
+import { AccountResponseDto } from '../dto/account-response.dto';
+import { ErrorMessagesEnum } from '../../shared/enum/error-messages.enum';
 
 @Injectable()
 export class AccountRepository {
@@ -21,7 +27,7 @@ export class AccountRepository {
   private insertInToAccountTable() {
     return this.database().insertInto(this.databaseName);
   }
-  async findAll() {
+  findAll() {
     return this.selectFromAccountTable().selectAll().execute();
   }
 
@@ -30,17 +36,21 @@ export class AccountRepository {
       const cacheKey = `account:${id}`;
       const cached = await this.redisService.getCache(cacheKey);
       if (cached) {
-        return cached;
+        return new AccountResponseDto(cached);
       } else {
         const result = await this.selectFromAccountTable()
           .selectAll()
           .where('account_id', '=', id)
           .executeTakeFirstOrThrow();
         await this.redisService.setCache(cacheKey, result);
-        return result;
+        return new AccountResponseDto(result);
       }
     } catch (error) {
-      notFoundMessage(error);
+      if (error.message === ErrorMessagesEnum.Not_Found) {
+        throw new NotFoundException(ErrorMessagesEnum.Not_Found);
+      } else {
+        throw new InternalServerErrorException(error);
+      }
     }
   }
 

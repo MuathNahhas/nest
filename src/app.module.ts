@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import databaseConfig from './config/env.config';
 import { MysqlDb } from './config/database/mysql/mysql-database.service';
 import { PgDb } from './config/database/postgres/postgress-database.service';
-import { AccountController } from './account/controller/account.controller';
 import { RedisModule } from './redis/ redis.module';
 import { AccountModule } from './account/account.module';
 import { DatabaseModule } from './config/database.module';
