@@ -1,21 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { AccountRepository } from '../repositories/account.repository';
 import { CreateAccountDto } from '../dto/create-account.dto';
+import { AccountResponseDto } from '../dto/account-response.dto';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async findAll() {
-    return await this.accountRepository.findAll();
+  findAll() {
+    return this.accountRepository.findAll();
   }
 
-  async findOne(accountId: number) {
-    return await this.accountRepository.findOne(accountId);
+  findOne(accountId: number): Promise<AccountResponseDto> {
+    return this.accountRepository.findOne(accountId);
   }
 
-  async create(createAccountDto: CreateAccountDto) {
+  create(createAccountDto: CreateAccountDto) {
     const createAccountRequest = createAccountDto.request;
-    return await this.accountRepository.create(createAccountRequest);
+    return this.accountRepository.create(createAccountRequest);
   }
 }
