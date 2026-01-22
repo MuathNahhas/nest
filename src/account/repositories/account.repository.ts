@@ -9,6 +9,7 @@ import { CreateAccountItemDto } from '../dto/create-account.dto';
 import { RedisService } from '../../redis/redis.service';
 import { AccountResponseDto } from '../dto/account-response.dto';
 import { ErrorMessagesEnum } from '../../shared/enum/error-messages.enum';
+import { CACHE_TTL } from '../../common/constant';
 
 @Injectable()
 export class AccountRepository {
@@ -42,7 +43,7 @@ export class AccountRepository {
           .selectAll()
           .where('account_id', '=', id)
           .executeTakeFirstOrThrow();
-        await this.redisService.setCache(cacheKey, result);
+        await this.redisService.setCache(cacheKey, result, CACHE_TTL.SHORT);
         return new AccountResponseDto(result);
       }
     } catch (error) {
