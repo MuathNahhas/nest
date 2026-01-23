@@ -10,6 +10,7 @@ import { RedisService } from '../../redis/redis.service';
 import { AccountResponseDto } from '../dto/account-response.dto';
 import { ErrorMessagesEnum } from '../../shared/enum/error-messages.enum';
 import { CACHE_TTL } from '../../common/constant';
+import { MyLoggerService } from '../logger/logger-service';
 
 @Injectable()
 export class AccountRepository {
@@ -17,6 +18,7 @@ export class AccountRepository {
   constructor(
     private readonly mysqlDatabase: MysqlDb,
     private readonly redisService: RedisService,
+    private readonly logger: MyLoggerService,
   ) {}
 
   private database() {
@@ -37,6 +39,7 @@ export class AccountRepository {
       const cacheKey = `account:${id}`;
       const cached = await this.redisService.getCache(cacheKey);
       if (cached) {
+        this.logger.log('received result from redis', JSON.stringify(cached));
         return new AccountResponseDto(cached);
       } else {
         const result = await this.selectFromAccountTable()
@@ -44,12 +47,18 @@ export class AccountRepository {
           .where('account_id', '=', id)
           .executeTakeFirstOrThrow();
         await this.redisService.setCache(cacheKey, result, CACHE_TTL.SHORT);
+        this.logger.log(
+          'received result from database',
+          JSON.stringify(result),
+        );
         return new AccountResponseDto(result);
       }
     } catch (error) {
       if (error.message === ErrorMessagesEnum.Not_Found) {
+        this.logger.error('error', JSON.stringify(error.message));
         throw new NotFoundException(ErrorMessagesEnum.Not_Found);
       } else {
+        this.logger.error('error', JSON.stringify(error));
         throw new InternalServerErrorException(error);
       }
     }
