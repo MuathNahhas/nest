@@ -4,9 +4,10 @@ import { AccountService } from './services/account.service';
 import { AccountRepository } from './repositories/account.repository';
 import { DatabaseModule } from '../config/database.module';
 import { RedisModule } from '../redis/ redis.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
-  imports: [DatabaseModule, RedisModule],
+  imports: [DatabaseModule, RedisModule, LoggerModule],
   controllers: [AccountController],
   providers: [AccountService, AccountRepository],
 })
