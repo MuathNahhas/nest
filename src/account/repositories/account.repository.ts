@@ -10,7 +10,7 @@ import { RedisService } from '../../redis/redis.service';
 import { AccountResponseDto } from '../dto/account-response.dto';
 import { ErrorMessagesEnum } from '../../shared/enum/error-messages.enum';
 import { CACHE_TTL } from '../../common/constant';
-import { MyLoggerService } from '../logger/logger-service';
+import { MyLoggerService } from '../../logger/logger-service';
 
 @Injectable()
 export class AccountRepository {

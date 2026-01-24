@@ -6,6 +6,7 @@ import { PgDb } from './config/database/postgres/postgress-database.service';
 import { RedisModule } from './redis/ redis.module';
 import { AccountModule } from './account/account.module';
 import { DatabaseModule } from './config/database.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DatabaseModule } from './config/database.module';
     RedisModule,
     AccountModule,
     DatabaseModule,
+    LoggerModule,
   ],
   providers: [MysqlDb, PgDb],
 })
