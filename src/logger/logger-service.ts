@@ -3,13 +3,13 @@ import { createLogger, format, transports, Logger } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import * as path from 'path';
 import * as fs from 'fs';
+const LokiTransport = require('winston-loki');
 
 @Injectable()
 export class MyLoggerService implements LoggerService {
   private logger: Logger;
   constructor() {
     const logDir = path.join(process.cwd(), 'logs');
-    //create log directory if it dosent exist
     if (!fs.existsSync(logDir)) {
       fs.mkdirSync(logDir, { recursive: true });
     }
@@ -19,7 +19,7 @@ export class MyLoggerService implements LoggerService {
         datePattern: 'YYYY-MM-DD',
         zippedArchive: true,
         maxSize: '20m',
-        maxFiles: '30d', // Keep logs for 30 days
+        maxFiles: '30d',
         auditFile: path.join(logDir, 'audit.json'),
         format: format.combine(format.timestamp(), format.json()),
       }),
@@ -32,25 +32,32 @@ export class MyLoggerService implements LoggerService {
           }),
         ),
       }),
+      loki: new LokiTransport({
+        host: process.env.DEV_GR_HOST,
+        basicAuth: process.env.DEV_GR_API_KEY,
+        labels: { app: 'nest_app', env: 'development', server: 'nest_server' },
+        json: true,
+        format: format.json(),
+        replaceTimestamp: true,
+        onConnectionError: (err) => console.error('Loki Error:', err),
+      }),
     };
     this.logger = createLogger({
-      level: 'info',
-      levels: {
-        error: 0,
-        warn: 1,
-        info: 2,
-        http: 3,
-        verbose: 4,
-        debug: 5,
-        silly: 6,
-      },
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
         format.json(),
       ),
-      transports: [transportOptions.file, transportOptions.console],
-      exceptionHandlers: [transportOptions.file, transportOptions.console],
+      transports: [
+        transportOptions.file,
+        transportOptions.console,
+        transportOptions.loki,
+      ],
+      exceptionHandlers: [
+        transportOptions.file,
+        transportOptions.console,
+        transportOptions.loki,
+      ],
       exitOnError: false,
     });
   }
