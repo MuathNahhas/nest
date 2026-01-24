@@ -58,7 +58,7 @@ export class AccountRepository {
         this.logger.error('error', JSON.stringify(error.message));
         throw new NotFoundException(ErrorMessagesEnum.Not_Found);
       } else {
-        this.logger.error('error', JSON.stringify(error));
+        this.logger.error('errorsdfdfsdf', JSON.stringify(error.message));
         throw new InternalServerErrorException(error);
       }
     }
