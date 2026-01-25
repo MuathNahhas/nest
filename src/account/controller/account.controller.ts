@@ -10,7 +10,9 @@ import {
 import { AccountService } from '../services/account.service';
 import { CreateAccountDto } from '../dto/create-account.dto';
 import { AccountResponseDto } from '../dto/account-response.dto';
+import { Authentication } from '../../authentication/decorators/authentication.decorator';
 
+@Authentication()
 @Controller({ path: 'account', version: '2' })
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}

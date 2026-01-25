@@ -5,9 +5,10 @@ import { AccountRepository } from './repositories/account.repository';
 import { DatabaseModule } from '../config/database.module';
 import { RedisModule } from '../redis/ redis.module';
 import { LoggerModule } from '../logger/logger.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [DatabaseModule, RedisModule, LoggerModule],
+  imports: [DatabaseModule, RedisModule, LoggerModule, JwtModule],
   controllers: [AccountController],
   providers: [AccountService, AccountRepository],
 })
