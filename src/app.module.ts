@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/env.config';
-import { MysqlDb } from './config/database/mysql/mysql-database.service';
-import { PgDb } from './config/database/postgres/postgress-database.service';
 import { RedisModule } from './redis/ redis.module';
 import { AccountModule } from './account/account.module';
 import { DatabaseModule } from './config/database.module';
