@@ -16,4 +16,5 @@ export interface UsersTable {
   password: string;
   updated_at: Generated<Date | null>;
   username: string;
+  role: string | null;
 }
