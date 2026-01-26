@@ -51,8 +51,6 @@ import Redis from 'ioredis';
     UsersModule,
   ],
   providers: [
-    MysqlDb,
-    PgDb,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
