@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/env.config';
 import { MysqlDb } from './config/database/mysql/mysql-database.service';
 import { PgDb } from './config/database/postgres/postgress-database.service';
@@ -9,9 +9,34 @@ import { DatabaseModule } from './config/database.module';
 import { LoggerModule } from './logger/logger.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [
+          {
+            ttl: 10000,
+            limit: 6,
+          },
+        ],
+        storage: new ThrottlerStorageRedisService(
+          new Redis({
+            host: config.get('DEV_REDIS_HOST'),
+            port: config.get<number>('DEV_REDIS_PORT'),
+            family: Number(config.get<number>('DEV_REDIS_FAMILY')),
+            db: config.get('DEV_REDIS_DATABASE'),
+            password: config.get('DEV_REDIS_PASSWORD'),
+            username: config.get('DEV_REDIS_USERNAME'),
+          }),
+        ),
+      }),
+    }),
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
       isGlobal: true,
@@ -25,6 +50,13 @@ import { UsersModule } from './users/users.module';
     AuthenticationModule,
     UsersModule,
   ],
-  providers: [MysqlDb, PgDb],
+  providers: [
+    MysqlDb,
+    PgDb,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

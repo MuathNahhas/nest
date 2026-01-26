@@ -3,7 +3,6 @@ import { Role } from '../enum/role.enum';
 import { RolesGuard } from '../guard/role.guard';
 import { AuthGuard } from '../../authentication/guards/auth.guard';
 
-
 export const ROLE_NAME = 'roles';
 export const Roles = (...role: Role[]) => {
   return applyDecorators(
