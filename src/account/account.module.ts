@@ -6,9 +6,10 @@ import { DatabaseModule } from '../config/database.module';
 import { RedisModule } from '../redis/ redis.module';
 import { LoggerModule } from '../logger/logger.module';
 import { JwtModule } from '@nestjs/jwt';
+import { QueueModule } from '../queue/queue.module';
 
 @Module({
-  imports: [DatabaseModule, RedisModule, LoggerModule, JwtModule],
+  imports: [DatabaseModule, RedisModule, LoggerModule, JwtModule, QueueModule],
   controllers: [AccountController],
   providers: [AccountService, AccountRepository],
 })
