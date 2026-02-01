@@ -11,6 +11,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import Redis from 'ioredis';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import Redis from 'ioredis';
     LoggerModule,
     AuthenticationModule,
     UsersModule,
+    QueueModule,
   ],
   providers: [
     {

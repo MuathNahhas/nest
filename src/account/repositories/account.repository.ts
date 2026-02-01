@@ -58,7 +58,8 @@ export class AccountRepository {
         this.logger.error('error', JSON.stringify(error.message));
         throw new NotFoundException(ErrorMessagesEnum.Not_Found);
       } else {
-        this.logger.error('errorsdfdfsdf', JSON.stringify(error.message));
+        console.log(error);
+        this.logger.error('error in get account', error);
         throw new InternalServerErrorException(error);
       }
     }
